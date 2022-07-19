@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311912, g: 0.3807398, b: 0.3587271, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -357,6 +357,7 @@ MonoBehaviour:
   holdPosition: {x: 0, y: 0, z: 0}
   BoardSize: {x: 10, y: 20}
   queue: 
+  hold: 
 --- !u!156049354 &172633480
 Grid:
   m_ObjectHideFlags: 0
@@ -415,6 +416,7 @@ MonoBehaviour:
   tile: {fileID: 11400000, guid: bf03fa1a414cbbd44bce1f9cd3cef872, type: 2}
   nextPiece: {fileID: 172633482}
   queuePosition: {x: 8, y: 7, z: 0}
+  holdPosition: {x: -9, y: 7, z: 0}
 --- !u!1 &394894586
 GameObject:
   m_ObjectHideFlags: 0

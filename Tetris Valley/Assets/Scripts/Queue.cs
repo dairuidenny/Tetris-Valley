@@ -7,46 +7,85 @@ public class Queue : MonoBehaviour
     public Tile tile;
     public Piece nextPiece;
     public Vector3Int queuePosition;
-    public Vector3Int[] cells { get; private set; }
+    public Vector3Int holdPosition;
     public Tilemap tilemap { get; private set; }
+    public TetrominoData queueData { get; private set; }
+    public TetrominoData holdData { get; private set; }
 
     private void Awake()
     {
         this.tilemap = GetComponentInChildren<Tilemap>();
-        this.cells = new Vector3Int[4]; //custom shape will change
     }
 
     private void LateUpdate()
     {
-        Clear();
-        Copy();
-        Set();
+        ClearQueue();
+        FindNext();
+        SetQueue();
+
+        ClearHold();
+        UpdateHold();
+        SetHold();
     }
 
-    private void Clear()
+    private void ClearQueue()
     {
-        for (int i = 0; i < this.cells.Length; i++)
+        if (queueData.cells != null)
         {
-            Vector3Int tilePosition = this.cells[i] + this.queuePosition;
-            this.tilemap.SetTile(tilePosition, null);
+            for (int i = 0; i < 4; i++)
+            {
+                Vector3Int tilePosition = (Vector3Int)queueData.cells[i] + this.queuePosition;
+                this.tilemap.SetTile(tilePosition, null);
+            }
         }
+
     }
 
-    private void Copy()
+    private void FindNext()
     {
-        for (int i = 0; i < this.cells.Length; i++)
-        {
-            this.cells[i] = this.nextPiece.cells[i];
-        }
+        int index = nextPiece.Wrap(board.queueIndex + 1, 0, 7);
+        queueData = board.tetrominoes[board.queue[index]];
     }
 
-    private void Set()
+    private void SetQueue()
     {
-        for (int i = 0; i < this.cells.Length; i++)
+        for (int i = 0; i < 4; i++)
         {
-            Vector3Int tilePosition = this.cells[i] + this.queuePosition;
+            Vector3Int tilePosition = (Vector3Int)queueData.cells[i] + this.queuePosition;
             this.tilemap.SetTile(tilePosition, this.tile);
         }
     }
 
+    private void ClearHold()
+    {
+        if (holdData.cells != null)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                Vector3Int tilePosition = (Vector3Int)holdData.cells[i] + this.holdPosition;
+                this.tilemap.SetTile(tilePosition, null);
+            }
+        }
+    }
+
+    private void UpdateHold()
+    {
+        if (board.hold.Count > 0)
+        {
+            holdData = board.tetrominoes[board.hold[0]];
+        }
+    }
+
+    private void SetHold()
+    {
+        if (board.hold.Count > 0)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                Vector3Int tilePosition = (Vector3Int)holdData.cells[i] + this.holdPosition;
+                this.tilemap.SetTile(tilePosition, this.tile);
+            }
+        }
+
+    }
 }

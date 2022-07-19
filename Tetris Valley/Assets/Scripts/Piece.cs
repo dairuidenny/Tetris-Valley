@@ -38,6 +38,7 @@ public class Piece : MonoBehaviour
         this.repeatDir = 0;
         this.moveCount = 0;
         this.moveCountMax = 15;
+        this.canHold = true;
 
         if (this.cells == null)
         {
@@ -124,6 +125,13 @@ public class Piece : MonoBehaviour
             this.dpadUp = true;
         }
 
+        //Hold
+        if (this.canHold & Input.GetButtonDown("Hold"))
+        {
+            Hold();
+            canHold = false;
+        }
+
         //Step
         if (Time.time >= this.stepTime)
         {
@@ -131,6 +139,20 @@ public class Piece : MonoBehaviour
         }
 
         this.board.Set(this);
+    }
+
+    private void Hold()
+    {
+        if (this.board.hold.Count == 0)
+        {
+            board.hold.Add(board.queue[board.queueIndex]);
+            board.SpawnPiece("normal");
+        }
+        else
+        {
+            board.hold.Add(board.queue[board.queueIndex]);
+
+        }
     }
 
     private void Step()
@@ -141,6 +163,7 @@ public class Piece : MonoBehaviour
         if (this.lockTime >= this.lockDelay)
         {
             Lock();
+            canHold = true;
         }
     }
 
@@ -148,7 +171,7 @@ public class Piece : MonoBehaviour
     {
         this.board.Set(this);
         this.board.ClearLines();
-        this.board.SpawnPiece();
+        this.board.SpawnPiece("normal");
     }
 
     private void Harddrop()

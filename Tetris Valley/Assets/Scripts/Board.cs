@@ -12,6 +12,7 @@ public class Board : MonoBehaviour
     public Vector3Int holdPosition;
     public Vector2Int BoardSize = new Vector2Int(10, 20);
     public List<int> queue = new List<int>();
+    public List<int> hold = new List<int>();
     public int queueIndex { get; private set; }
 
     public RectInt Bounds
@@ -33,24 +34,32 @@ public class Board : MonoBehaviour
             this.tetrominoes[i].Initialsze();
         }
         NewBag();
-        queueIndex = 0;
+        queueIndex = -1;
     }
 
     private void Start()
     {
-        SpawnPiece();
+        SpawnPiece("normal");
     }
 
-    public void SpawnPiece()
+    public void SpawnPiece(string type)
     {
-        TetrominoData data = this.tetrominoes[queue[queueIndex]];
-        queueIndex = activePiece.Wrap(queueIndex + 1, 0, 7);
-        if (queueIndex == 6)
+        if (type == "normal")
         {
-            NewBag();
+            queueIndex = activePiece.Wrap(queueIndex + 1, 0, 7);
+            TetrominoData data = this.tetrominoes[queue[queueIndex]];
+            if (queueIndex == 6)
+            {
+                NewBag();
+            }
+
+            this.activePiece.Initialized(this, this.spawnPosition, data);
+        }
+        else if (true)
+        {
+
         }
 
-        this.activePiece.Initialized(this, this.spawnPosition, data);
 
         if (isValidPosition(this.activePiece, this.spawnPosition))
         {
