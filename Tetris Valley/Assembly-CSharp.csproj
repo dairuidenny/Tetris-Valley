@@ -64,6 +64,7 @@
     <Compile Include="Assets\Scripts\Data.cs" />
     <Compile Include="Assets\Scripts\Ghost.cs" />
     <Compile Include="Assets\Scripts\Piece.cs" />
+    <Compile Include="Assets\Scripts\Queue.cs" />
     <Compile Include="Assets\Scripts\Tetromino.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>D:/Projects/Tetris Valley/Tetris-Valley/Tetris Valley/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>

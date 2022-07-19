@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Tilemaps;
-using System.Linq;
+using System.Collections.Generic;
 
 public class Board : MonoBehaviour
 {
@@ -11,6 +11,8 @@ public class Board : MonoBehaviour
     public Vector3Int queuePosition;
     public Vector3Int holdPosition;
     public Vector2Int BoardSize = new Vector2Int(10, 20);
+    public List<int> queue = new List<int>();
+    public int queueIndex { get; private set; }
 
     public RectInt Bounds
     {
@@ -30,6 +32,8 @@ public class Board : MonoBehaviour
         {
             this.tetrominoes[i].Initialsze();
         }
+        NewBag();
+        queueIndex = 0;
     }
 
     private void Start()
@@ -39,8 +43,12 @@ public class Board : MonoBehaviour
 
     public void SpawnPiece()
     {
-        int random = Random.Range(0, this.tetrominoes.Length);
-        TetrominoData data = this.tetrominoes[random];
+        TetrominoData data = this.tetrominoes[queue[queueIndex]];
+        queueIndex = activePiece.Wrap(queueIndex + 1, 0, 7);
+        if (queueIndex == 6)
+        {
+            NewBag();
+        }
 
         this.activePiece.Initialized(this, this.spawnPosition, data);
 
@@ -52,10 +60,6 @@ public class Board : MonoBehaviour
         {
             GameOver();
         }
-
-
-        int[] bag1 = { 1, 2, 3, 4, 5, 6, 7 };
-
     }
 
     private void GameOver()
@@ -64,6 +68,19 @@ public class Board : MonoBehaviour
 
         //Gameover action...
     }
+
+    private void NewBag()
+    {
+        queue.Clear();
+        List<int> numList = new List<int> { 0, 1, 2, 3, 4, 5, 6 };
+        for (int i = 7; i > 0; i--)
+        {
+            int c = Random.Range(0, i);
+            queue.Add(numList[c]);
+            numList.Remove(numList[c]);
+        }
+    }
+
 
     public void Set(Piece piece)
     {

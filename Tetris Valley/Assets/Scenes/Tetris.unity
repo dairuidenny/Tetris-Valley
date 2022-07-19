@@ -317,6 +317,7 @@ GameObject:
   - component: {fileID: 172633480}
   - component: {fileID: 172633479}
   - component: {fileID: 172633482}
+  - component: {fileID: 172633483}
   m_Layer: 0
   m_Name: TetrominoGrid
   m_TagString: Untagged
@@ -355,6 +356,7 @@ MonoBehaviour:
   queuePosition: {x: 0, y: 0, z: 0}
   holdPosition: {x: 0, y: 0, z: 0}
   BoardSize: {x: 10, y: 20}
+  queue: 
 --- !u!156049354 &172633480
 Grid:
   m_ObjectHideFlags: 0
@@ -397,6 +399,22 @@ MonoBehaviour:
   stepDelay: 1
   lockDelay: 0.5
   repeatDelay: 0.3
+--- !u!114 &172633483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 172633478}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50fe5801a8987544691bbbe1a13f8e35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  board: {fileID: 172633479}
+  tile: {fileID: 11400000, guid: bf03fa1a414cbbd44bce1f9cd3cef872, type: 2}
+  nextPiece: {fileID: 172633482}
+  queuePosition: {x: 8, y: 7, z: 0}
 --- !u!1 &394894586
 GameObject:
   m_ObjectHideFlags: 0
@@ -700,7 +718,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 105.8
   orthographic: 1
   orthographic size: 13
   m_Depth: -1
