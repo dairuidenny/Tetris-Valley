@@ -52,14 +52,13 @@ public class Board : MonoBehaviour
             {
                 NewBag();
             }
-
             this.activePiece.Initialized(this, this.spawnPosition, data);
         }
-        else if (true)
+        else if (type == "swap")
         {
-
+            TetrominoData data = this.tetrominoes[hold[0]];
+            this.activePiece.Initialized(this, this.spawnPosition, data);
         }
-
 
         if (isValidPosition(this.activePiece, this.spawnPosition))
         {

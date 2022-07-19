@@ -150,8 +150,8 @@ public class Piece : MonoBehaviour
         }
         else
         {
-            board.hold.Add(board.queue[board.queueIndex]);
-
+            board.SpawnPiece("swap");
+            board.hold[0] = board.queue[board.queueIndex];
         }
     }
 
