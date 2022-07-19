@@ -352,6 +352,8 @@ MonoBehaviour:
   - tetromino: 6
     tile: {fileID: 11400000, guid: bf03fa1a414cbbd44bce1f9cd3cef872, type: 2}
   spawnPosition: {x: -1, y: 8, z: 0}
+  queuePosition: {x: 0, y: 0, z: 0}
+  holdPosition: {x: 0, y: 0, z: 0}
   BoardSize: {x: 10, y: 20}
 --- !u!156049354 &172633480
 Grid:
@@ -392,8 +394,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e0b5cadbfeecb645963bd5e534aa71f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stepDelay: 0.5
+  stepDelay: 1
   lockDelay: 0.5
+  repeatDelay: 0.3
 --- !u!1 &394894586
 GameObject:
   m_ObjectHideFlags: 0

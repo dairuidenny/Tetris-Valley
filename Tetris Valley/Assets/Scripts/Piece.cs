@@ -10,11 +10,21 @@ public class Piece : MonoBehaviour
 
     public float stepDelay = 1f;
     public float lockDelay = 0.5f;
-    public float repeatDelay = 0.3f;
+    public float repeatDelay = 0.2f;
 
     private float stepTime;
     private float lockTime;
     private float repeatTime;
+    private int repeatDir;
+
+    private int moveCount;
+    private int moveCountMax;
+    private bool dpadUp;
+    private bool dpadDown;
+    private bool dpadLeft;
+    private bool dpadRight;
+    private bool canHold;
+
 
     public void Initialized(Board board, Vector3Int position, TetrominoData data)
     {
@@ -25,8 +35,11 @@ public class Piece : MonoBehaviour
         this.stepTime = Time.time + this.stepDelay;
         this.lockTime = 0f;
         this.repeatTime = 0f;
+        this.repeatDir = 0;
+        this.moveCount = 0;
+        this.moveCountMax = 15;
 
-        if(this.cells == null)
+        if (this.cells == null)
         {
             this.cells = new Vector3Int[data.cells.Length];
         }
@@ -43,58 +56,74 @@ public class Piece : MonoBehaviour
         this.lockTime += Time.deltaTime;
 
         //Move
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        if (Input.GetButtonDown("Left") | (this.dpadLeft & Input.GetAxisRaw("DpadX") < 0f))
         {
             Move(Vector2Int.left);
+            repeatTime = 0;
+            repeatDir = -1;
+            dpadLeft = false;
         }
-        else if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (Input.GetButtonDown("Right") | (this.dpadRight & Input.GetAxisRaw("DpadX") > 0f))
         {
             Move(Vector2Int.right);
+            repeatTime = 0;
+            repeatDir = 1;
+            dpadRight = false;
         }
-        if (Input.GetKeyUp(KeyCode.LeftArrow))
+        if (Input.GetAxisRaw("DpadX") == 0f)
+        {
+            this.dpadLeft = true;
+            this.dpadRight = true;
+        }
+        if (Input.GetKeyUp(KeyCode.LeftArrow) | Input.GetKeyUp(KeyCode.RightArrow))
         {
             repeatTime = 0;
+            repeatDir = 0;
         }
-        if (Input.GetKeyUp(KeyCode.RightArrow))
-        {
-            repeatTime = 0;
-        }
-        if (Input.GetKey(KeyCode.LeftArrow))
+        if (Input.GetKey(KeyCode.LeftArrow) | Input.GetAxisRaw("DpadX") < 0f)
         {
             repeatTime += Time.deltaTime;
-            if (repeatTime >= repeatDelay)
+            if (repeatTime >= repeatDelay & repeatDir != 1)
             {
                 Move(Vector2Int.left);
             }
         }
-        else if (Input.GetKey(KeyCode.RightArrow))
+        if (Input.GetKey(KeyCode.RightArrow) | Input.GetAxisRaw("DpadX") > 0f)
         {
             repeatTime += Time.deltaTime;
-            if (repeatTime >= repeatDelay)
+            if (repeatTime >= repeatDelay & repeatDir != -1)
             {
                 Move(Vector2Int.right);
             }
         }
 
         //Rotate
-        if (Input.GetKeyDown(KeyCode.Z))
+        if (Input.GetButtonDown("RotateL"))
         {
             Rotate(-1);
         }
-        else if (Input.GetKeyDown(KeyCode.X))
+        if (Input.GetButtonDown("RotateR"))
         {
             Rotate(1);
         }
+
         //Soft drop
-        if (Input.GetKey(KeyCode.DownArrow))
+        if (Input.GetButton("SoftDrop") | Input.GetAxisRaw("DpadY") < -0f)
         {
             Move(Vector2Int.down);
         }
+
         //Hard drop
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetButtonDown("HardDrop") | (this.dpadUp & Input.GetAxisRaw("DpadY") > 0f))
         {
             Harddrop();
+            this.dpadUp = false;
         }
+        if (Input.GetAxisRaw("DpadY") == 0f)
+        {
+            this.dpadUp = true;
+        }
+
         //Step
         if (Time.time >= this.stepTime)
         {
@@ -141,8 +170,23 @@ public class Piece : MonoBehaviour
 
         if (valid)
         {
-            this.position = newPosition;
-            this.lockTime = 0f;
+            if (translation.y >= 0 & IsTouchDown(this)) //touching surface
+            {
+                this.moveCount++;
+            }
+            else
+            {
+                this.moveCount = 0;
+            }
+            if (this.moveCount <= this.moveCountMax)
+            {
+                this.position = newPosition;
+                this.lockTime = 0f;
+            }
+            else
+            {
+                valid = false;
+            }
         }
 
         return valid;
@@ -187,6 +231,20 @@ public class Piece : MonoBehaviour
 
             this.cells[i] = new Vector3Int(x, y, 0);
         }
+    }
+
+    private bool IsTouchDown(Piece piece)
+    {
+        for (int i = 0; i < piece.cells.Length; i++)
+        {
+            Vector3Int positionDown = piece.cells[i] + piece.position + Vector3Int.down;
+
+            if (this.board.tilemap.HasTile(positionDown) | positionDown.y <= -this.board.BoardSize.y / 2)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     private bool TestWallKicks(int rotationIndex, int rotationDirection)

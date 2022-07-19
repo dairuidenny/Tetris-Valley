@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Tilemaps;
+using System.Linq;
 
 public class Board : MonoBehaviour
 {
@@ -7,6 +8,8 @@ public class Board : MonoBehaviour
     public Piece activePiece { get; private set; }
     public TetrominoData[] tetrominoes;
     public Vector3Int spawnPosition;
+    public Vector3Int queuePosition;
+    public Vector3Int holdPosition;
     public Vector2Int BoardSize = new Vector2Int(10, 20);
 
     public RectInt Bounds
@@ -49,6 +52,10 @@ public class Board : MonoBehaviour
         {
             GameOver();
         }
+
+
+        int[] bag1 = { 1, 2, 3, 4, 5, 6, 7 };
+
     }
 
     private void GameOver()
