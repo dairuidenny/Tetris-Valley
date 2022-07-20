@@ -2,13 +2,6 @@
 /Tetris Valley/Library
 /Tetris Valley/.vs
 Tetris Valley/Assembly-CSharp.csproj
-Tetris Valley/Assembly-CSharp.csproj
-Tetris Valley/Logs/Packages-Update.log
-Tetris Valley/obj/Debug/Assembly-CSharp.csproj.CoreCompileInputs.cache
-Tetris Valley/obj/Debug/Assembly-CSharp.csproj.CoreCompileInputs.cache
-Tetris Valley/obj/Debug/Assembly-CSharp.csprojAssemblyReference.cache
-Tetris Valley/Packages/manifest.json
-Tetris Valley/obj/Debug/Assembly-CSharp.csproj.CoreCompileInputs.cache
-Tetris Valley/obj/Debug/Assembly-CSharp.csprojAssemblyReference.cache
-Tetris Valley/Packages/manifest.json
-Tetris Valley/Assembly-CSharp.csproj
+Tetris Valley/Logs
+Tetris Valley/obj
+Tetris Valley/Packages
