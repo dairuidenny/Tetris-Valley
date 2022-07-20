@@ -60,10 +60,13 @@ public class Queue : MonoBehaviour
     {
         if (holdData.cells != null)
         {
-            for (int i = 0; i < 4; i++)
+            for (int i = -2; i < 3; i++)
             {
-                Vector3Int tilePosition = (Vector3Int)holdData.cells[i] + this.holdPosition;
-                this.tilemap.SetTile(tilePosition, null);
+                for (int j = 0; j < 2; j++)
+                {
+                    Vector3Int tilePosition = new Vector3Int(i, j, 0) + this.holdPosition;
+                    this.tilemap.SetTile(tilePosition, null);
+                }
             }
         }
     }
@@ -83,6 +86,12 @@ public class Queue : MonoBehaviour
             for (int i = 0; i < 4; i++)
             {
                 Vector3Int tilePosition = (Vector3Int)holdData.cells[i] + this.holdPosition;
+
+                if (board.hold[0] == 0) //Move I 1 tile left
+                {
+                    tilePosition += Vector3Int.left;
+                }
+
                 this.tilemap.SetTile(tilePosition, this.tile);
             }
         }
