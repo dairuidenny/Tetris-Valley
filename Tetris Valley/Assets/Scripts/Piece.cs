@@ -24,6 +24,7 @@ public class Piece : MonoBehaviour
     private bool dpadLeft;
     private bool dpadRight;
     private bool canHold;
+    private bool isPause;
 
 
     public void Initialized(Board board, Vector3Int position, TetrominoData data)
@@ -39,6 +40,7 @@ public class Piece : MonoBehaviour
         this.moveCount = 0;
         this.moveCountMax = 15;
         this.canHold = true;
+        this.isPause = false;
 
         if (this.cells == null)
         {
@@ -53,92 +55,102 @@ public class Piece : MonoBehaviour
 
     private void Update()
     {
-        this.board.Clear(this);
-        this.lockTime += Time.deltaTime;
+        //Pause
+        if (Input.GetButtonDown("Pause"))
+        {
+            isPause = !isPause;
+        }
 
-        //Move
-        if (Input.GetButtonDown("Left") | (this.dpadLeft & Input.GetAxisRaw("DpadX") < 0f))
+        if (!isPause)
         {
-            Move(Vector2Int.left);
-            repeatTime = 0;
-            repeatDir = -1;
-            dpadLeft = false;
-        }
-        if (Input.GetButtonDown("Right") | (this.dpadRight & Input.GetAxisRaw("DpadX") > 0f))
-        {
-            Move(Vector2Int.right);
-            repeatTime = 0;
-            repeatDir = 1;
-            dpadRight = false;
-        }
-        if (Input.GetAxisRaw("DpadX") == 0f)
-        {
-            this.dpadLeft = true;
-            this.dpadRight = true;
-        }
-        if (Input.GetKeyUp(KeyCode.LeftArrow) | Input.GetKeyUp(KeyCode.RightArrow))
-        {
-            repeatTime = 0;
-            repeatDir = 0;
-        }
-        if (Input.GetKey(KeyCode.LeftArrow) | Input.GetAxisRaw("DpadX") < 0f)
-        {
-            repeatTime += Time.deltaTime;
-            if (repeatTime >= repeatDelay & repeatDir != 1)
+            this.board.Clear(this);
+            this.lockTime += Time.deltaTime;
+
+            //Move
+            if (Input.GetButtonDown("Left") | (this.dpadLeft & Input.GetAxisRaw("DpadX") < 0f))
             {
                 Move(Vector2Int.left);
+                repeatTime = 0;
+                repeatDir = -1;
+                dpadLeft = false;
             }
-        }
-        if (Input.GetKey(KeyCode.RightArrow) | Input.GetAxisRaw("DpadX") > 0f)
-        {
-            repeatTime += Time.deltaTime;
-            if (repeatTime >= repeatDelay & repeatDir != -1)
+            if (Input.GetButtonDown("Right") | (this.dpadRight & Input.GetAxisRaw("DpadX") > 0f))
             {
                 Move(Vector2Int.right);
+                repeatTime = 0;
+                repeatDir = 1;
+                dpadRight = false;
             }
-        }
+            if (Input.GetAxisRaw("DpadX") == 0f)
+            {
+                this.dpadLeft = true;
+                this.dpadRight = true;
+            }
+            if (Input.GetKeyUp(KeyCode.LeftArrow) | Input.GetKeyUp(KeyCode.RightArrow))
+            {
+                repeatTime = 0;
+                repeatDir = 0;
+            }
+            if (Input.GetKey(KeyCode.LeftArrow) | Input.GetAxisRaw("DpadX") < 0f)
+            {
+                repeatTime += Time.deltaTime;
+                if (repeatTime >= repeatDelay & repeatDir != 1)
+                {
+                    Move(Vector2Int.left);
+                }
+            }
+            if (Input.GetKey(KeyCode.RightArrow) | Input.GetAxisRaw("DpadX") > 0f)
+            {
+                repeatTime += Time.deltaTime;
+                if (repeatTime >= repeatDelay & repeatDir != -1)
+                {
+                    Move(Vector2Int.right);
+                }
+            }
 
-        //Rotate
-        if (Input.GetButtonDown("RotateL"))
-        {
-            Rotate(-1);
-        }
-        if (Input.GetButtonDown("RotateR"))
-        {
-            Rotate(1);
-        }
+            //Rotate
+            if (Input.GetButtonDown("RotateL"))
+            {
+                Rotate(-1);
+            }
+            if (Input.GetButtonDown("RotateR"))
+            {
+                Rotate(1);
+            }
 
-        //Soft drop
-        if (Input.GetButton("SoftDrop") | Input.GetAxisRaw("DpadY") < -0f)
-        {
-            Move(Vector2Int.down);
-        }
+            //Soft drop
+            if (Input.GetButton("SoftDrop") | Input.GetAxisRaw("DpadY") < -0f)
+            {
+                Move(Vector2Int.down);
+            }
 
-        //Hard drop
-        if (Input.GetButtonDown("HardDrop") | (this.dpadUp & Input.GetAxisRaw("DpadY") > 0f))
-        {
-            Harddrop();
-            this.dpadUp = false;
-        }
-        if (Input.GetAxisRaw("DpadY") == 0f)
-        {
-            this.dpadUp = true;
-        }
+            //Hard drop
+            if (Input.GetButtonDown("HardDrop") | (this.dpadUp & Input.GetAxisRaw("DpadY") > 0f))
+            {
+                Harddrop();
+                this.dpadUp = false;
+            }
+            if (Input.GetAxisRaw("DpadY") == 0f)
+            {
+                this.dpadUp = true;
+            }
 
-        //Hold
-        if (this.canHold & Input.GetButtonDown("Hold"))
-        {
-            Hold();
-            canHold = false;
-        }
+            //Hold
+            if (this.canHold & Input.GetButtonDown("Hold"))
+            {
+                Hold();
+                canHold = false;
+            }
 
-        //Step
-        if (Time.time >= this.stepTime)
-        {
-            Step();
-        }
+            //Step
+            if (Time.time >= this.stepTime)
+            {
+                Step();
+            }
 
-        this.board.Set(this);
+            this.board.Set(this);
+
+        }
     }
 
     private void Hold()
